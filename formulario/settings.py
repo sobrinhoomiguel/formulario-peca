@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'formulario.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
+        default="postgresql://postgres:IMxxfbBxcFpHNkxPWkXRsoofhrSFMSji@nozomi.proxy.rlwy.net:58478/railway",
         conn_max_age=600,
         conn_health_checks=True,
         ssl_require=True,
