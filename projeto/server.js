@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public')); // Para servir arquivos estáticos
-
+app.use('/img', express.static('public/img'));
 // Configuração do banco de dados PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,

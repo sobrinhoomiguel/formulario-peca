@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Musical SEICE 2026 - Vote Agora!</title>
     <style>
-            @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -46,13 +45,13 @@
         }
 
         .header-line {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 6px;
-                background: #ffd92d;
-            }
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #ffd92d;
+        }
 
         h1 {
             color: #333;
@@ -60,13 +59,6 @@
             margin-bottom: 10px;
             line-height: 1.3;
             font-weight: 700;
-        }
-
-        .subtitle {
-            color: #313131;
-            font-size: 0.95em;
-            line-height: 1.6;
-            margin-bottom: 15px;
         }
 
         .intro-text {
@@ -125,6 +117,17 @@
             flex-shrink: 0;
         }
 
+        .movie-emoji {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+        }
+
         .movie-info {
             flex: 1;
         }
@@ -176,9 +179,9 @@
             letter-spacing: 1px;
         }
 
-        .submit-btn:hover {
+        .submit-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         .submit-btn:disabled {
@@ -206,15 +209,47 @@
             color: #555;
             font-size: 1.1em;
             line-height: 1.6;
+            margin-bottom: 10px;
         }
 
-        .emoji {
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #FFB230;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background: #fee;
+            border: 2px solid #fcc;
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 20px;
+            color: #c33;
         }
 
-        .emoji img {
-            width: 270px;
-            height: auto;
+        .error-message.show {
+            display: block;
         }
     </style>
 </head>
@@ -223,7 +258,7 @@
         <div class="header-line"></div>
         <div id="formContent">
             <div class="header">
-                <img src="../img/seice-logo.png" alt="SEICE logo">
+                <img src="/img/seice-logo.png" alt="SEICE logo" onerror="this.style.display='none'">
                 <h1>🎭✨ A GRANDE ESCOLHA DO MUSICAL SEICE 2026! ✨🎭</h1>
             </div>
 
@@ -233,12 +268,15 @@
                 <strong>Vote e ajude a decidir qual dessas histórias encantadoras vai subir ao palco!</strong>
             </div>
 
+            <div class="error-message" id="errorMessage"></div>
+
             <form id="voteForm">
                 <div class="options">
                     <label class="option-card" for="moana">
                         <input type="radio" name="movie" id="moana" value="Moana">
                         <div class="card-content">
-                            <img src="../img/moanacapa.jpg" alt="Moana" class="movie-image">
+                            <img src="/img/moanacapa.jpg" alt="Moana" class="movie-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="movie-emoji" style="background: linear-gradient(135deg, #4a90e2, #67b8e3); display:none;">🌊</div>
                             <div class="movie-info">
                                 <div class="movie-title">🌊 Moana</div>
                                 <div class="movie-description">Uma jornada épica sobre coragem, descoberta e o poder de seguir sua própria trilha!</div>
@@ -250,7 +288,8 @@
                     <label class="option-card" for="encanto">
                         <input type="radio" name="movie" id="encanto" value="Encanto">
                         <div class="card-content">
-                            <img src="../img/encantocapa.jpg" alt="Encanto" class="movie-image">
+                            <img src="/img/encantocapa.jpg" alt="Encanto" class="movie-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="movie-emoji" style="background: linear-gradient(135deg, #f093fb, #f5576c); display:none;">🏠</div>
                             <div class="movie-info">
                                 <div class="movie-title">🏠 Encanto</div>
                                 <div class="movie-description">Uma explosão de cores, ritmos e emoções com a família Madrigal e seus dons mágicos!</div>
@@ -262,7 +301,8 @@
                     <label class="option-card" for="enrolados">
                         <input type="radio" name="movie" id="enrolados" value="Enrolados">
                         <div class="card-content">
-                            <img src="../img/enroladoscapa.jpg" alt="Enrolados" class="movie-image">
+                            <img src="/img/enroladoscapa.jpg" alt="Enrolados" class="movie-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="movie-emoji" style="background: linear-gradient(135deg, #ffecd2, #fcb69f); display:none;">🌸</div>
                             <div class="movie-info">
                                 <div class="movie-title">🌸 Enrolados</div>
                                 <div class="movie-description">Uma aventura cheia de luz, humor e sonhos que se tornam realidade!</div>
@@ -278,8 +318,13 @@
             </form>
         </div>
 
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Registrando seu voto...</p>
+        </div>
+
         <div id="thankYou" class="thank-you">
-            <div class="emoji"><img src="../img/seice-logo.png" alt="Logo SEICE"></div>
+            <div style="font-size: 5em; margin-bottom: 20px;">🎉</div>
             <h2>Obrigado!</h2>
             <p><strong>Colégio SEICE agradece pela sua contribuição!</strong></p>
             <p>Seu voto foi registrado com sucesso. A magia está apenas começando! ✨</p>
@@ -287,12 +332,17 @@
     </div>
 
     <script>
+        // URL da API - usa automaticamente a URL onde está hospedado
+        const API_URL = window.location.origin;
+
         const form = document.getElementById('voteForm');
         const submitBtn = document.getElementById('submitBtn');
         const radioButtons = document.querySelectorAll('input[type="radio"]');
         const optionCards = document.querySelectorAll('.option-card');
         const formContent = document.getElementById('formContent');
         const thankYou = document.getElementById('thankYou');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
 
         // Atualiza visual ao selecionar opção
         radioButtons.forEach(radio => {
@@ -300,21 +350,50 @@
                 optionCards.forEach(card => card.classList.remove('selected'));
                 this.closest('.option-card').classList.add('selected');
                 submitBtn.disabled = false;
+                errorMessage.classList.remove('show');
             });
         });
 
         // Envio do formulário
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const selectedMovie = document.querySelector('input[name="movie"]:checked');
-            if (selectedMovie) {
-                // Aqui você pode adicionar código para enviar os dados para um servidor
-                console.log('Voto registrado:', selectedMovie.value);
+            if (!selectedMovie) {
+                return;
+            }
+
+            formContent.style.display = 'none';
+            loading.classList.add('show');
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/api/vote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        movie: selectedMovie.value
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao registrar voto');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
                 
-                // Mostra mensagem de agradecimento
-                formContent.style.display = 'none';
+                loading.classList.remove('show');
                 thankYou.classList.add('show');
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                loading.classList.remove('show');
+                formContent.style.display = 'block';
+                errorMessage.textContent = 'Ops! Ocorreu um erro ao registrar seu voto. Por favor, tente novamente.';
+                errorMessage.classList.add('show');
+                submitBtn.disabled = false;
             }
         });
     </script>
