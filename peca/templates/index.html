@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -36,6 +38,11 @@
         .header {
             text-align: center;
             margin-bottom: 25px;
+        }
+
+        .header img{
+            width: 220px;
+            margin: 20px 30px;
         }
 
         .header-line {
@@ -214,9 +221,11 @@
 <body>
     <div class="container">
         <div class="header-line"></div>
+        {% csrf_token %}
         <div id="formContent">
             <div class="header">
-                <h1>🎭✨ A GRANDE ESCOLHA DO MUSICAL SEICE 2026! ✨🎭</h1>
+                <img src="{% static 'seice-logo.png' %}" alt="SEICE Logo">
+                <h1>🎭 A GRANDE ESCOLHA DO MUSICAL SEICE 2026! ✨</h1>
             </div>
 
             <div class="intro-text">
@@ -230,7 +239,7 @@
                     <label class="option-card" for="moana">
                         <input type="radio" name="movie" id="moana" value="Moana">
                         <div class="card-content">
-                            <img src="../img/moanacapa.jpg" alt="Moana" class="movie-image">
+                            <img src="{% static 'moanacapa.jpg' %}" alt="Moana" class="movie-image">
                             <div class="movie-info">
                                 <div class="movie-title">🌊 Moana</div>
                                 <div class="movie-description">Uma jornada épica sobre coragem, descoberta e o poder de seguir sua própria trilha!</div>
@@ -242,7 +251,7 @@
                     <label class="option-card" for="encanto">
                         <input type="radio" name="movie" id="encanto" value="Encanto">
                         <div class="card-content">
-                            <img src="../img/encantocapa.jpg" alt="Encanto" class="movie-image">
+                            <img src="{% static 'encanto_capa.jpg' %}" alt="Encanto" class="movie-image">
                             <div class="movie-info">
                                 <div class="movie-title">🏠 Encanto</div>
                                 <div class="movie-description">Uma explosão de cores, ritmos e emoções com a família Madrigal e seus dons mágicos!</div>
@@ -254,7 +263,7 @@
                     <label class="option-card" for="enrolados">
                         <input type="radio" name="movie" id="enrolados" value="Enrolados">
                         <div class="card-content">
-                            <img src="../img/enroladoscapa.jpg" alt="Enrolados" class="movie-image">
+                            <img src="{% static 'enroladoscapa.jpg' %}" alt="Enrolados" class="movie-image">
                             <div class="movie-info">
                                 <div class="movie-title">🌸 Enrolados</div>
                                 <div class="movie-description">Uma aventura cheia de luz, humor e sonhos que se tornam realidade!</div>
@@ -271,7 +280,7 @@
         </div>
 
         <div id="thankYou" class="thank-you">
-            <div class="emoji"><img src="../img/seice-logo.png" alt="Logo SEICE"></div>
+            <div class="emoji"><img src="{% static 'seice-logo.png' %}" alt="Logo SEICE"></div>
             <h2>Obrigado!</h2>
             <p><strong>Colégio SEICE agradece pela sua contribuição!</strong></p>
             <p>Seu voto foi registrado com sucesso. A magia está apenas começando! ✨</p>
@@ -298,15 +307,32 @@
         // Envio do formulário
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const selectedMovie = document.querySelector('input[name="movie"]:checked');
             if (selectedMovie) {
-                // Aqui você pode adicionar código para enviar os dados para um servidor
-                console.log('Voto registrado:', selectedMovie.value);
-                
-                // Mostra mensagem de agradecimento
-                formContent.style.display = 'none';
-                thankYou.classList.add('show');
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                fetch('/vote/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ movie: selectedMovie.value })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        // Mostra mensagem de agradecimento
+                        formContent.style.display = 'none';
+                        thankYou.classList.add('show');
+                    } else {
+                        alert('Erro: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao enviar voto.');
+                });
             }
         });
     </script>
