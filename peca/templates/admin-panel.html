@@ -169,62 +169,32 @@
         <h1 class="title">Contagem de Votos</h1>
         <p class="subtitle">Musical SEICE 2026</p>
 
-        <div id="results">
-            <div class="loading">Carregando resultados...</div>
+       <div id="results">
+            {% comment %} Renderiza no servidor usando 'sorted_votes' e 'ganhador' passados pela view {% endcomment %}
+            {% for musical, votes in sorted_votes %}
+                <div class="vote-card">
+                    <img src="{% static musical|lower|add:'capa.jpg' %}" 
+                         alt="{{ musical }}" 
+                         class="musical-image">
+                    <div class="musical-info">
+                        <div class="musical-name">
+                            {% if musical == 'Moana' %}🌊{% elif musical == 'Encanto' %}🏠{% else %}🌸{% endif %}
+                            {{ musical }}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="vote-count">{{ votes }}</div>
+                        <div class="vote-label">{{ votes|pluralize:"voto,votos" }}</div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="loading">Nenhum voto registrado ainda.</div>
+            {% endfor %}
         </div>
     </div>
 
     <script>
-        async function loadVotes() {
-            try {
-                const response = await fetch('/get_votes/');
-                const data = await response.json();
-
-                const musicals = {
-                    'Moana': {
-                        image: '{% static 'moanacapa.jpg' %}',
-                        emoji: '🌊'
-                    },
-                    'Encanto': {
-                        image: '{% static 'encanto_capa.jpg' %}',
-                        emoji: '🏠'
-                    },
-                    'Enrolados': {
-                        image: '{% static 'enrolados_capa.jpg' %}',
-                        emoji: '🌸'
-                    }
-                };
-
-                const resultsHTML = Object.entries(data)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([musical, votes]) => `
-                        <div class="vote-card">
-                            <img src="${musicals[musical]?.image || 'https://via.placeholder.com/80'}" 
-                                 alt="${musical}" 
-                                 class="musical-image">
-                            <div class="musical-info">
-                                <div class="musical-name">${musicals[musical]?.emoji || ''} ${musical}</div>
-                            </div>
-                            <div>
-                                <div class="vote-count">${votes}</div>
-                                <div class="vote-label">${votes === 1 ? 'voto' : 'votos'}</div>
-                            </div>
-                        </div>
-                    `).join('');
-
-                document.getElementById('results').innerHTML = resultsHTML;
-
-                // Atualiza a cada 5 segundos
-                setTimeout(loadVotes, 5000);
-
-            } catch (error) {
-                document.getElementById('results').innerHTML = 
-                    '<div class="error">Erro ao carregar os votos. Tentando novamente...</div>';
-                setTimeout(loadVotes, 3000);
-            }
-        }
-
-        loadVotes();
+       
     </script>
 </body>
 </html>
