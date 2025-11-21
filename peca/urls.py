@@ -8,6 +8,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('vote/', views.vote, name='vote'),
     path('get_votes/', views.get_votes, name='get_votes'),
+    path('ganhador/', views.ganhador, name='ganhador'),
+    path('delete_votes/', views.delete_votes, name='delete_votes'),
 ]
 
 
