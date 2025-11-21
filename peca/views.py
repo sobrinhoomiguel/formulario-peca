@@ -52,3 +52,6 @@ def ganhador(request):
             vote_counts[vote.movie] += 1
     vencedor = max(vote_counts, key=vote_counts.get)
     return JsonResponse({'vencedor': vencedor, 'votos': vote_counts[vencedor]})
+
+def admin_panel(request):
+    return render(request, 'admin-panel.html')

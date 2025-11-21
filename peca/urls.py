@@ -10,6 +10,7 @@ urlpatterns = [
     path('get_votes/', views.get_votes, name='get_votes'),
     path('ganhador/', views.ganhador, name='ganhador'),
     path('delete_votes/', views.delete_votes, name='delete_votes'),
+    path('admin-panel/', views.admin_panel, name='admin_panel'),
 ]
 
 
