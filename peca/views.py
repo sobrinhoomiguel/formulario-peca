@@ -34,3 +34,21 @@ def get_votes(request):
             vote_counts[vote.movie] += 1
     return JsonResponse(vote_counts)
 
+
+@csrf_exempt
+def delete_votes(request):
+    if request.method == 'POST':
+        Vote.objects.all().delete()
+        return JsonResponse({'message': 'All votes deleted successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+@csrf_exempt
+def ganhador(request):
+    votes = Vote.objects.all()
+    vote_counts = {'Moana': 0, 'Encanto': 0, 'Enrolados': 0}
+    for vote in votes:
+        if vote.movie in vote_counts:
+            vote_counts[vote.movie] += 1
+    vencedor = max(vote_counts, key=vote_counts.get)
+    return JsonResponse({'vencedor': vencedor, 'votos': vote_counts[vencedor]})
