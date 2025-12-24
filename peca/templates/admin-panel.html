@@ -1,0 +1,200 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contagem de Votos - SEICE 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #a7a7a7f8 -20%, #eeeeee 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-line {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 6px;
+                background: #ffd92d;
+            }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            max-width: 280px;
+            height: auto;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .vote-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #e0e0e0;
+        }
+
+        .vote-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .musical-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .musical-info {
+            flex: 1;
+        }
+
+        .musical-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .vote-count {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0e0e0ed8;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .vote-label {
+            font-size: 14px;
+            color: #666;
+            text-align: right;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .vote-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .vote-count {
+                text-align: center;
+            }
+
+            .vote-label {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-line"></div>
+        {% csrf_token %}
+        <div class="logo-container">
+            <img src="{% static 'seice-logo.png' %}" alt="Colégio SEICE" class="logo">
+        </div>
+
+        <h1 class="title">Contagem de Votos</h1>
+        <p class="subtitle">Musical SEICE 2026</p>
+
+       <div id="results">
+            {% comment %} Renderiza no servidor usando 'sorted_votes' e 'ganhador' passados pela view {% endcomment %}
+            {% for musical, votes in sorted_votes %}
+                <div class="vote-card">
+                    <img src="{% static musical|lower|add:'capa.jpg' %}" 
+                         alt="{{ musical }}" 
+                         class="musical-image">
+                    <div class="musical-info">
+                        <div class="musical-name">
+                            {% if musical == 'Moana' %}🌊{% elif musical == 'Encanto' %}🏠{% else %}🌸{% endif %}
+                            {{ musical }}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="vote-count">{{ votes }}</div>
+                        <div class="vote-label">{{ votes|pluralize:"voto,votos" }}</div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="loading">Nenhum voto registrado ainda.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+       
+    </script>
+</body>
+</html>
